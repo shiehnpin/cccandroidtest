@@ -1,8 +1,6 @@
 package com.enping.cccandroidtest.repository.local.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.enping.cccandroidtest.model.Estimate
 import com.enping.cccandroidtest.model.Person
 
@@ -11,7 +9,7 @@ interface EstimateDao{
     @Query("SELECT * FROM estimate WHERE id = :id")
     suspend fun findEstimateById(id: String) : Estimate
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(estimate: Estimate)
 }
 
@@ -20,6 +18,6 @@ interface PersonDao{
     @Query("SELECT * FROM person WHERE id = :id")
     suspend fun findPersonById(id: String) : Person
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(person: Person)
 }

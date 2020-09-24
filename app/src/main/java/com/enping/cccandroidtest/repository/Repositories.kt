@@ -20,10 +20,18 @@ class EstimateRecordRepository(
             revisionNumber = est.revisionNumber,
             number = est.number,
             contact = personRepository.getById(est.contact),
-            createdBy = personRepository.getById(est.contact),
-            requestedBy = personRepository.getById(est.contact),
+            createdBy = personRepository.getById(est.createdBy),
+            requestedBy = personRepository.getById(est.requestedBy),
             createdDate = est.createdDate
         )
+    }
+
+    suspend fun insertPerson(person: Person) {
+        personRepository.insert(person)
+    }
+
+    suspend fun insertEstimate(estimate: Estimate) {
+        estimateRepository.insert(estimate)
     }
 }
 
