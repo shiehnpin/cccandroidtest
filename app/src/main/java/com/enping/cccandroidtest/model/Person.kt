@@ -12,16 +12,16 @@ data class Person(
     @ColumnInfo(name = "id")
     @SerializedName("id")
     val id: String = "",
-    @ColumnInfo(name = "email")
     @SerializedName("email")
+    @ColumnInfo(name = "email")
     val email: String = "",
-    @ColumnInfo(name = "first_name")
     @SerializedName("first_name")
+    @ColumnInfo(name = "first_name")
     val firstName: String = "",
-    @ColumnInfo(name = "last_name")
     @SerializedName("last_name")
+    @ColumnInfo(name = "last_name")
     val lastName: String = "",
-    @ColumnInfo(name = "phone_number")
     @SerializedName("phone_number")
+    @ColumnInfo(name = "phone_number")
     val phoneNumber: String = ""
 )

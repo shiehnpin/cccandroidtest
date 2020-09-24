@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+// Personal advice: Using @Embedded for retrieval person object.
 @Entity
 data class Estimate(
 
