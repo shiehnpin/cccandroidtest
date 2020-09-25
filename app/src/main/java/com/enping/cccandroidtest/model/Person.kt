@@ -24,4 +24,7 @@ data class Person(
     @SerializedName("phone_number")
     @ColumnInfo(name = "phone_number")
     val phoneNumber: String = ""
-)
+){
+    val fullName
+    get() = "$firstName $lastName"
+}

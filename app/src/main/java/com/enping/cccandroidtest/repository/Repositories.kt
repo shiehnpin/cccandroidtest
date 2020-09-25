@@ -5,25 +5,35 @@ import com.enping.cccandroidtest.model.Person
 import com.enping.cccandroidtest.model.Record
 import com.enping.cccandroidtest.repository.local.room.EstimateDao
 import com.enping.cccandroidtest.repository.local.room.PersonDao
+import io.reactivex.Flowable
+import io.reactivex.functions.Function4
 
 class EstimateRecordRepository(
     private val estimateRepository: EstimateRepository,
     private val personRepository: PersonRepository
 ) {
-    suspend fun getEstimateRecordById(id: String): Record{
-        val est = estimateRepository.getById(id)
-
-        return Record(
-            id = est.id,
-            address = est.address,
-            company = est.company,
-            revisionNumber = est.revisionNumber,
-            number = est.number,
-            contact = personRepository.getById(est.contact),
-            createdBy = personRepository.getById(est.createdBy),
-            requestedBy = personRepository.getById(est.requestedBy),
-            createdDate = est.createdDate
-        )
+    fun getEstimateRecordById(id: String): Flowable<Record> {
+        return estimateRepository.getById(id).flatMap {
+            Flowable.zip(
+                Flowable.just(it),
+                personRepository.getById(it.contact),
+                personRepository.getById(it.createdBy),
+                personRepository.getById(it.requestedBy),
+                Function4<Estimate, Person, Person, Person, Record> { est, contact, createdBy, requestedBy ->
+                    Record(
+                        id = est.id,
+                        address = est.address,
+                        company = est.company,
+                        revisionNumber = est.revisionNumber,
+                        number = est.number,
+                        contact = contact,
+                        createdBy = createdBy,
+                        requestedBy = requestedBy,
+                        createdDatetime = est.createdDate
+                    )
+                }
+            )
+        }
     }
 
     suspend fun insertPerson(person: Person) {
@@ -37,7 +47,7 @@ class EstimateRecordRepository(
 
 class EstimateRepository(private val dao: EstimateDao) {
 
-    suspend fun getById(id: String): Estimate {
+    fun getById(id: String): Flowable<Estimate> {
         return dao.findEstimateById(id)
     }
 
@@ -48,7 +58,7 @@ class EstimateRepository(private val dao: EstimateDao) {
 
 class PersonRepository(private val dao: PersonDao) {
 
-    suspend fun getById(id: String): Person {
+    fun getById(id: String): Flowable<Person> {
         return dao.findPersonById(id)
     }
 
